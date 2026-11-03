@@ -1,0 +1,66 @@
+# Builds the recorder from this repository's source on GitHub's own Windows machines.
+# Every push is compiled and tested. When a release is published, the tested zip, its SHA-256
+# checksums and a signed build-provenance attestation are attached, so anyone can verify the
+# download was produced from this exact source by this workflow.
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write      # attach the zip to a release
+      id-token: write      # build-provenance attestation
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download pinned Microsoft libraries from nuget.org (fingerprints checked)
+        shell: powershell
+        run: .\tools\restore-libs.ps1
+
+      - name: Build
+        shell: powershell
+        run: .\build.ps1
+
+      - name: Test
+        shell: powershell
+        run: .\test.ps1 -CI
+
+      - name: Package
+        shell: powershell
+        run: |
+          $version = if ('${{ github.event_name }}' -eq 'release') { '${{ github.event.release.tag_name }}' } else { 'dev-' + '${{ github.sha }}'.Substring(0, 7) }
+          .\tools\package.ps1 -Version $version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VR-Session-Recorder
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS.txt
+
+      - name: Attest build provenance
+        if: github.event_name == 'release'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*.zip
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $zip = Get-ChildItem dist\*.zip | Select-Object -First 1 -ExpandProperty FullName
+          gh release upload '${{ github.event.release.tag_name }}' $zip dist\SHA256SUMS.txt --clobber

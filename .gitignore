@@ -1,0 +1,13 @@
+# Build outputs (the release zip is built by GitHub from source)
+*.exe
+!*.exe.config
+RecorderTests.exe.config
+lib/
+dist/
+# Created when the recorder runs - personal data, never commit
+Recordings/
+Validation/
+settings.json
+capture-verification.json
+toggle-test-log.txt
+test-results*.txt
