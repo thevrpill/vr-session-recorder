@@ -23,7 +23,7 @@ jobs:
       id-token: write      # build-provenance attestation
       attestations: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download pinned Microsoft libraries from nuget.org (fingerprints checked)
         shell: powershell
@@ -43,7 +43,7 @@ jobs:
           $version = if ('${{ github.event_name }}' -eq 'release') { '${{ github.event.release.tag_name }}' } else { 'dev-' + '${{ github.sha }}'.Substring(0, 7) }
           .\tools\package.ps1 -Version $version
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: VR-Session-Recorder
           path: |
@@ -52,7 +52,7 @@ jobs:
 
       - name: Attest build provenance
         if: github.event_name == 'release'
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: dist/*.zip
 
