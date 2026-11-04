@@ -7,6 +7,8 @@ It does two things while you play:
 1. **Fixes the slow-down-over-time problem automatically.** After 15-60 minutes the Virtual Desktop stream can gradually lose frame rate (for example 120 fps sliding to 70). Restarting the stream with VD's *Shift+Win+D* shortcut (out of VR and back) brings it straight back. This tool notices the slowdown and does that refresh for you, **only when it is actually needed and only when you open the in-game map**, so it never interrupts gameplay.
 2. **Records your session** (frame pacing, GPU load/memory/temperature, encoder, CPU, memory, network) and saves an offline report when you quit, so you can see what happened instead of guessing.
 
+**[⬇ Download the latest version](https://github.com/thevrpill/vr-session-recorder/releases/latest)** and get the file named **`VR-Session-Recorder-v….zip`**, *not* "Source code (zip)". The source zip has no program in it.
+
 > Unofficial. Not affiliated with or endorsed by Virtual Desktop, Meta, Rockstar Games, or the REAL VR mod. Free and open source (MIT licence). Use at your own risk.
 
 ## Does it work?
@@ -30,7 +32,7 @@ It never refreshed during healthy play, and it ignored 40+ ordinary map/pause pr
 
 ## Install and use
 
-1. Download the latest `VR-Session-Recorder-<version>.zip` from [Releases](https://github.com/thevrpill/vr-session-recorder/releases) and extract it anywhere (for example `Documents\VR Session Recorder`).
+1. Download the latest `VR-Session-Recorder-<version>.zip` from [Releases](https://github.com/thevrpill/vr-session-recorder/releases/latest) (under **Assets**; ignore the two "Source code" links) and extract it anywhere (for example `Documents\VR Session Recorder`).
 2. Run `VR Session Recorder.exe` **before** starting GTA. Windows asks for administrator permission. That is needed to read Virtual Desktop's built-in performance events (Windows "ETW" tracing).
    - The program is not code-signed, so Windows SmartScreen may say *"Windows protected your PC"*. Click **More info -> Run anyway** if you trust it, or [build it yourself](#build-it-yourself).
    - The first launch runs a short self-check of event capture.
